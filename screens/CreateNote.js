@@ -57,7 +57,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#222B45",
     padding: 30,
-    paddingTop: 80,
     width: Dimensions.get("window").width,
   },
   bottom: {

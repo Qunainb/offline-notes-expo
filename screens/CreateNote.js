@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TextInput,
   View,
+  Alert,
 } from "react-native";
 import { Button } from "@ui-kitten/components";
 import { useNavigation } from "@react-navigation/native";
@@ -16,12 +17,27 @@ export default function CreateNote() {
   const navigation = useNavigation();
 
   async function handleSaveNote() {
+    // Check if note is empty or only contains whitespace
+    if (!note.trim()) {
+      Alert.alert(
+        "Empty Note",
+        "Please enter some content before creating a note.",
+        [
+          {
+            text: "OK",
+            style: "default"
+          }
+        ]
+      );
+      return;
+    }
+
     const value = await AsyncStorage.getItem("NOTES");
     const notes = value ? JSON.parse(value) : [];
-    notes.push(note);
+    notes.push(note.trim()); // Trim whitespace before saving
     await AsyncStorage.setItem("NOTES", JSON.stringify(notes));
     setNote("");
-    navigation.navigate("AllNotes");
+    navigation.navigate("HomeTabs", { screen: "AllNotes" });
   }
 
   return (

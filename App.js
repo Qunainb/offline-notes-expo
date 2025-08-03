@@ -1,62 +1,50 @@
 import * as eva from "@eva-design/eva";
-import { StyleSheet } from "react-native";
-
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
   ApplicationProvider,
   BottomNavigation,
   BottomNavigationTab,
-  Layout,
-  Text,
 } from "@ui-kitten/components";
 
-const { Navigator, Screen } = createBottomTabNavigator();
+import CreateNote from "./screens/CreateNote";
+import AllNotes from "./screens/AllNotes";
+import Note from "./screens/Note";
 
-const UsersScreen = () => (
-  <Layout style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-    <Text category="h1">USERS</Text>
-  </Layout>
-);
+// Tab setup
+const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
-const OrdersScreen = () => (
-  <Layout style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-    <Text category="h1">ORDERS</Text>
-  </Layout>
-);
-
+// Bottom tab bar UI
 const BottomTabBar = ({ navigation, state }) => (
   <BottomNavigation
     selectedIndex={state.index}
     onSelect={(index) => navigation.navigate(state.routeNames[index])}
   >
-    <BottomNavigationTab title="USERS" />
-    <BottomNavigationTab title="ORDERS" />
+    <BottomNavigationTab title="Create" />
+    <BottomNavigationTab title="All Notes" />
   </BottomNavigation>
 );
 
+// Tab Navigator
 const TabNavigator = () => (
-  <Navigator tabBar={(props) => <BottomTabBar {...props} />}>
-    <Screen name="Users" component={UsersScreen} />
-    <Screen name="Orders" component={OrdersScreen} />
-  </Navigator>
+  <Tab.Navigator tabBar={(props) => <BottomTabBar {...props} />}>
+    <Tab.Screen name="Create" component={CreateNote} />
+    <Tab.Screen name="AllNotes" component={AllNotes} />
+  </Tab.Navigator>
 );
 
+// Stack Navigator (includes tabs + "Note" screen)
 export default function App() {
   return (
     <ApplicationProvider {...eva} theme={eva.dark}>
       <NavigationContainer>
-        <TabNavigator />
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="HomeTabs" component={TabNavigator} />
+          <Stack.Screen name="Note" component={Note} />
+        </Stack.Navigator>
       </NavigationContainer>
     </ApplicationProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
